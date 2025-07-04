@@ -1,0 +1,78 @@
+{% extends 'notificaciones/base.html' %}
+
+{% block title %}{{ titulo }} - Ministerio Público{% endblock %}
+
+{% block page_title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="form-container">
+            <div class="alert alert-info" role="alert">
+                <strong>Información:</strong> Solo los administradores pueden registrar nuevos usuarios.
+            </div>
+            
+            <form method="post" novalidate>
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label for="{{ form.username.id_for_label }}" class="form-label">
+                        Nombre de Usuario
+                    </label>
+                    {{ form.username }}
+                    {% if form.username.errors %}
+                        {% for error in form.username.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    <div class="form-text">
+                        Requerido. 150 caracteres o menos. Solo letras, dígitos y @/./+/-/_ permitidos.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="{{ form.password1.id_for_label }}" class="form-label">
+                        Contraseña
+                    </label>
+                    {{ form.password1 }}
+                    {% if form.password1.errors %}
+                        {% for error in form.password1.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label for="{{ form.password2.id_for_label }}" class="form-label">
+                        Confirmar Contraseña
+                    </label>
+                    {{ form.password2 }}
+                    {% if form.password2.errors %}
+                        {% for error in form.password2.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    <div class="form-text">
+                        Ingrese la misma contraseña que antes, para verificación.
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <a href="{% url 'lista_notificaciones' %}" class="btn btn-secondary me-2">
+                        Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        Registrar Usuario
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
