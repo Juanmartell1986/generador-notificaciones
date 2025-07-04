@@ -1,0 +1,129 @@
+{% extends 'notificaciones/base.html' %}
+
+{% block title %}Lista de Notificaciones - Ministerio Público{% endblock %}
+
+{% block page_title %}Lista de Notificaciones{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h5>Asunto Mensaje Destinatario Fecha Acción</h5>
+                {% if notificaciones.count == 0 %}
+                <p class="text-muted">No hay notificaciones registradas.</p>
+                {% endif %}
+            </div>
+            <div>
+                <a href="{% url 'generar_notificacion' %}" class="btn btn-primary">
+                    Nueva Notificación
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if notificaciones.count > 0 %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Caso</th>
+                        <th>Nombres</th>
+                        <th>Urgencia</th>
+                        <th>Dirección</th>
+                        <th>Fiscal</th>
+                        <th>Fecha</th>
+                        <th>Creado por</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for notificacion in notificaciones %}
+                    <tr>
+                        <td>{{ notificacion.caso }}</td>
+                        <td>{{ notificacion.nombres }}</td>
+                        <td>
+                            <span class="badge 
+                                {% if notificacion.urgencia == 'Alta' %}bg-danger
+                                {% elif notificacion.urgencia == 'Media' %}bg-warning
+                                {% else %}bg-success{% endif %}">
+                                {{ notificacion.urgencia }}
+                            </span>
+                        </td>
+                        <td>{{ notificacion.direccion|truncatechars:30 }}</td>
+                        <td>{{ notificacion.fiscal }}</td>
+                        <td>{{ notificacion.fecha|date:"d/m/Y" }}</td>
+                        <td>{{ notificacion.usuario_creador.get_full_name|default:notificacion.usuario_creador.username }}</td>
+                        <td>
+                            {% if notificacion.documento_url %}
+                            <a href="{{ notificacion.documento_url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                Ver Documento
+                            </a>
+                            {% endif %}
+                            <a href="{% url 'editar_notificacion' notificacion.id %}" class="btn btn-sm btn-outline-secondary">
+                                Editar
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="row mt-5">
+    <div class="col-md-12">
+        <h4>Usuarios Registrados</h4>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>¿Administrador?</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for usuario in usuarios %}
+                    <tr>
+                        <td>{{ usuario.get_full_name|default:usuario.username }}</td>
+                        <td>{{ usuario.email|default:"No especificado" }}</td>
+                        <td>
+                            {% if usuario.perfilusuario.es_administrador %}
+                                <span class="badge bg-success">Sí</span>
+                            {% else %}
+                                <span class="badge bg-secondary">No</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if user.perfilusuario.es_administrador and usuario != user %}
+                            <button class="btn btn-sm btn-danger" onclick="confirmarEliminacion('{{ usuario.username }}', {{ usuario.id }})">
+                                Eliminar
+                            </button>
+                            {% else %}
+                            <span class="badge bg-info">Protegido</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+function confirmarEliminacion(username, userId) {
+    if (confirm('¿Está seguro de que desea eliminar al usuario "' + username + '"?')) {
+        // Aquí iría la lógica para eliminar el usuario
+        window.location.href = '/eliminar-usuario/' + userId + '/';
+    }
+}
+</script>
+{% endblock %}
