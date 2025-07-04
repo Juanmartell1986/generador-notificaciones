@@ -70,13 +70,13 @@
     </style>
 </head>
 <body>
+    {% load static %}
     <div class="login-container">
-        <div class="login-header">
-            <h2>MINISTERIO PÚBLICO</h2>
-            <p>FISCALÍA DE LA NACIÓN</p>
-            <hr>
-            <h4>Iniciar Sesión</h4>
+        <div class="login-header d-flex align-items-center justify-content-center">
+            <img src="{% static 'notificaciones/images/01_ESCUDO DORADO HORIZONTAL.webp' %}" alt="Logo" style="max-width: 100%; height: auto;">
         </div>
+        <hr style="width: 100%; border-color: #D9A927;">
+        <h4>Iniciar Sesión</h4>
 
         {% if form.errors %}
             <div class="alert alert-danger" role="alert">
