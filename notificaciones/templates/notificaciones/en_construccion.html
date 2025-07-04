@@ -1,0 +1,22 @@
+{% extends 'notificaciones/base.html' %}
+
+{% block title %}{{ titulo }} - Ministerio Público{% endblock %}
+
+{% block page_title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-container text-center">
+            <div class="mb-4">
+                <i class="fas fa-tools fa-5x text-muted mb-3"></i>
+                <h3 class="text-muted">{{ mensaje }}</h3>
+                <p class="text-muted">Esta sección estará disponible próximamente.</p>
+            </div>
+            <a href="{% url 'lista_notificaciones' %}" class="btn btn-primary">
+                Volver a Lista de Notificaciones
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
